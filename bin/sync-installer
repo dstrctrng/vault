@@ -2,7 +2,21 @@
 
 pth_install=$1; shift
 
-rsync -ia bin $pth_install/ # TODO replace with git ops
+# initialize the vault
+if [[ ! -d $pth_install ]]; then
+  git clone https://github.com/HeSYINUvSBZfxqA/vault $pth_install
+fi
+
+# uppdate the vault
+pushd $pth_install > /dev/null
+git pull origin master
+popd > /dev/null
+
+# cache repositories
 rsync -ia git/. $pth_install/git/ --delete
+
+# cache boxes
 rsync -ia --no-t virtualbox/boxes $pth_install/virtualbox/
+
+# cache ports packages
 rsync -ia --no-t macports/software $pth_install/macports/
