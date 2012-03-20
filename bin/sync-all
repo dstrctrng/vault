@@ -1,0 +1,4 @@
+#!/bin/bash -e
+
+bin/sync-installer /Volumes/Installer/vault/
+bin/sync-builder /Volumes/Builder/vault/

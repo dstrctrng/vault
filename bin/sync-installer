@@ -1,0 +1,7 @@
+#!/bin/bash -e
+
+pth_install=$1; shift
+
+rsync -ia bin $pth_install/
+rsync -ia virtualbox/boxes $pth_install/virtualbox/
+rsync -ia macports/software $pth_install/macports/
