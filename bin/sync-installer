@@ -2,6 +2,7 @@
 
 pth_install=$1; shift
 
-rsync -ia bin $pth_install/
+rsync -ia bin $pth_install/ # TODO replace with git ops
+rsync -ia git/. $pth_install/git/ --delete
 rsync -ia --no-t virtualbox/boxes $pth_install/virtualbox/
 rsync -ia --no-t macports/software $pth_install/macports/
