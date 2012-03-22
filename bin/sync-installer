@@ -19,4 +19,9 @@ rsync -ia git/. $pth_install/git/ --delete
 rsync -ia --no-t virtualbox/boxes $pth_install/virtualbox/
 
 # cache ports packages
-rsync -ia --no-t macports/software $pth_install/macports/
+for a in *; do
+  if [[ -d $a/software ]]; then
+    rsync -ia --no-t $a/software $pth_install/$a/
+  fi
+done
+
