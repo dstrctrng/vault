@@ -1,4 +1,5 @@
-/macports
+/*/distfiles
+/*/software
 /virtualbox
 .DS_Store
 /git
