@@ -12,6 +12,9 @@ pushd $pth_install > /dev/null
 git pull origin master
 popd > /dev/null
 
+# cache software
+rsync -ia software/. $pth_install/software/ --delete
+
 # cache repositories
 rsync -ia git/. $pth_install/git/ --delete
 
