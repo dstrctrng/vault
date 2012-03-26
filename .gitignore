@@ -1,6 +1,8 @@
+.DS_Store
 /*/distfiles
 /*/software
 /virtualbox
-.DS_Store
-/git
+/macports
 /software
+/git
+/zendesk
