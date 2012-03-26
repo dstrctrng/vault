@@ -1,0 +1,8 @@
+#!/bin/bash -e
+
+for a in git/*; do
+  pushd $a
+  git fetch
+  git reset --hard origin/master
+  popd
+done
