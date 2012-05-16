@@ -2,29 +2,17 @@
 
 pth_install=$1; shift
 
-# initialize the vault
-if [[ ! -d $pth_install ]]; then
-  git clone https://github.com/HeSYINUvSBZfxqA/vault $pth_install
-fi
-
-# uppdate the vault
-pushd $pth_install > /dev/null
-git pull origin master
-popd > /dev/null
-
 # cache software
-rsync -ia software/. $pth_install/software/ --delete
-
-# cache repositories
-rsync -ia git/. $pth_install/git/ --delete
+rsync -ia vault/software/. $pth_install/software/ --delete
 
 # cache boxes
-rsync -ia --no-t virtualbox/boxes $pth_install/virtualbox/
+#rsync -ia --no-t vault/virtualbox/boxes $pth_install/virtualbox/ --delete
 
 # cache ports packages
-for a in *; do
-  if [[ -d $a/software ]]; then
-    rsync -ia --no-t $a/software $pth_install/$a/
-  fi
+for a in vault/*/software; do
+  component="${a#vault/}"
+  component="${component%/software}"
+  mkdir -p $pth_install/$component
+  rsync -ia --no-t vault/$component/software/. $pth_install/$component/software/ --delete
 done
 
