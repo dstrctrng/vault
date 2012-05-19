@@ -1,0 +1,76 @@
+#!/bin/bash
+
+#/ NAME
+#/     dist -- distibute vault to another directory
+#/
+#/ SYNOPSIS
+#/     dist (installer|builder) [vault]
+
+# figure out the project root under which bin, lib live
+shome="$(cd -P -- "$(dirname -- "$0")/.." && pwd -P)"
+
+# load a meat library
+source "$shome/bin/_prime" "$@"
+
+# entry point
+function main {
+  nm_dist=$1; shift
+  pth_install=$1; shift
+
+  case "$nm_dist" in
+    installer)
+      # cache software
+      rsync -iaO vault/software/. $pth_install/software/ --delete
+
+      # cache boxes
+      rsync -iaO vault/virtualbox/boxes $pth_install/virtualbox/ --delete
+
+      # cache ports packages
+      for a in vault/*/software; do
+        component="${a#vault/}"
+        component="${component%/software}"
+        mkdir -p "$pth_install/$component"
+        rsync -iaO vault/$component/software/. $pth_install/$component/software/ --delete
+      done
+      ;;
+
+    builder)
+      # cache software
+      rsync -iaO vault/software/. $pth_install/software/ --delete
+
+      # cache downloads, isos
+      rsync -iaO vault/virtualbox/. $pth_install/virtualbox/ --delete
+
+      # cache distfiles
+      rsync -iaO vault/macports/. $pth_install/macports/ --delete
+      ;;
+
+    case *)
+      logger_fatal "unknown dist type: $nm_dist"
+      exit 1
+      ;;
+  esac
+}
+
+# define command line options:
+#   var name, default, description, short option
+
+# parse the command-line
+parse_command_line "$@" || exit $?
+eval set -- "${FLAGS_ARGV}"
+
+if [[ "$#" < 1 ]]; then
+  logger_fatal "missing dist type"
+  display_help
+  exit 1
+fi
+
+if [[ "$#" < 2 ]]; then
+  logger_fatal "missing vault dest"
+  display_help
+  exit 1
+fi
+
+# pass arguments to entry point
+main "$@"
+
