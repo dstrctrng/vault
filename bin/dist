@@ -26,12 +26,14 @@ function main {
       rsync -iaO vault/virtualbox/boxes $pth_install/virtualbox/ --delete
 
       # cache ports packages
+      set +f
       for a in vault/*/software; do
         component="${a#vault/}"
         component="${component%/software}"
         mkdir -p "$pth_install/$component"
         rsync -iaO vault/$component/software/. $pth_install/$component/software/ --delete
       done
+      set -f
       ;;
 
     builder)
