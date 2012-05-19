@@ -3,7 +3,7 @@
 pth_install=$1; shift
 
 # cache software
-rsync -ia vault/software/. $pth_install/software/ --delete
+rsync -ia --no-t vault/software/. $pth_install/software/ --delete
 
 # cache downloads, isos
 rsync -ia --no-t vault/virtualbox/. $pth_install/virtualbox/ --delete
