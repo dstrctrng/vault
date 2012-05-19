@@ -45,7 +45,7 @@ function main {
       rsync -iaO vault/macports/. $pth_install/macports/ --delete
       ;;
 
-    case *)
+    *)
       logger_fatal "unknown dist type: $nm_dist"
       exit 1
       ;;
