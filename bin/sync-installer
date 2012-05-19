@@ -3,16 +3,16 @@
 pth_install=$1; shift
 
 # cache software
-rsync -ia --no-t vault/software/. $pth_install/software/ --delete
+rsync -ia vault/software/. $pth_install/software/ --delete
 
 # cache boxes
-rsync -ia --no-t vault/virtualbox/boxes $pth_install/virtualbox/ --delete
+rsync -ia vault/virtualbox/boxes $pth_install/virtualbox/ --delete
 
 # cache ports packages
 for a in vault/*/software; do
   component="${a#vault/}"
   component="${component%/software}"
-  mkdir -p $pth_install/$component
-  rsync -ia --no-t vault/$component/software/. $pth_install/$component/software/ --delete
+  mkdir -p "$pth_install/$component"
+  rsync -ia vault/$component/software/. $pth_install/$component/software/ --delete
 done
 
