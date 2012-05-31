@@ -4,7 +4,7 @@
 #/     push -- distibute vault to another directory
 #/
 #/ SYNOPSIS
-#/     push (installer|builder) [vault]
+#/     push installer [vault]
 
 # figure out the project root under which bin, lib live
 shome="$(cd -P -- "$(dirname -- "$0")/.." && pwd -P)"
@@ -25,9 +25,6 @@ function main {
     installer)
       push_installer "$@"
       ;;
-    builder)
-      push_builder "$@"
-      ;;
     *)
       logger_fatal "unknown dist type: $nm_dist"
       exit 1
@@ -45,39 +42,14 @@ function push_installer {
   local pth_install=$1; shift
 
   # cache software
-  rsync -iaO vault/software/. $pth_install/software/ --delete
+
+  rsync -iaO software/. $pth_install/software/ --delete
 
   # cache boxes
-  rsync -iaO vault/virtualbox/boxes $pth_install/virtualbox/ --delete
+  rsync -iaO virtualbox/boxes $pth_install/virtualbox/ --delete
 
   # cache ports packages
-  set +f
-  for a in vault/*/software; do
-    component="${a#vault/}"
-    component="${component%/software}"
-    mkdir -p "$pth_install/$component"
-    rsync -iaO vault/$component/software/. $pth_install/$component/software/ --delete
-  done
-  set -f
-}
-
-function push_builder {
-  if [[ "$#" < 1 ]]; then
-    logger_fatal "missing vault dest"
-    display_help
-    exit 1
-  fi
-
-  local pth_install=$1; shift
-
-  # cache software
-  rsync -iaO vault/software/. $pth_install/software/ --delete
-
-  # cache downloads, isos
-  rsync -iaO vault/virtualbox/. $pth_install/virtualbox/ --delete
-
-  # cache distfiles
-  rsync -iaO vault/macports/. $pth_install/macports/ --delete
+  rsync -iaO macports/software $pth_install/macports/ --delete
 }
 
 # define command line options:
